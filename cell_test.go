@@ -33,7 +33,21 @@ func TestLink(t *testing.T) {
   c1 := NewCell(10, 10)
   c2 := NewCell(10, 10)
 
-  c1.Link(c2, true)
+  c1.Link(c2)
+  
+  want := c2
+  got := c1.links[c2]
+
+  if got != true {
+    t.Errorf("got %v want %v given, %v", got, want, c1.links)
+  }
+}
+
+func TestBLink(t *testing.T) {
+  c1 := NewCell(10, 10)
+  c2 := NewCell(10, 10)
+
+  c1.BLink(c2, true)
   
   want := c2
   got := c1.links[c2]
@@ -47,7 +61,7 @@ func TestUnlink(t *testing.T) {
   c1 := NewCell(10, 10)
   c2 := NewCell(10, 10)
 
-  c1.Link(c2, true)
+  c1.Link(c2)
   c1.Unlink(c2, true)
   
   want := false
@@ -62,7 +76,7 @@ func TestLinked(t *testing.T) {
   c1 := NewCell(10, 10)
   c2 := NewCell(10, 10)
 
-  c1.Link(c2, true)
+  c1.Link(c2)
   
   want := true
   got := c1.Linked(c2)
@@ -77,8 +91,8 @@ func TestLinks(t *testing.T) {
   c2 := NewCell(10, 10)
   c3 := NewCell(10, 10)
 
-  c1.Link(c2, true)
-  c1.Link(c3, true)
+  c1.Link(c2)
+  c1.Link(c3)
   
   want := []*Cell{c2, c3}
   got := c1.Links()

@@ -21,10 +21,14 @@ func NewCell(row int, col int) *Cell {
   return &c
 }
 
-func (c Cell) Link(c2 *Cell, bidi bool) Cell {
+func (c Cell) Link(c2 *Cell) Cell {
+  return c.BLink(c2, true)
+}
+
+func (c Cell) BLink(c2 *Cell, bidi bool) Cell {
   c.links[c2] = true
   if bidi {
-    c2.Link(&c, false)
+    c2.BLink(&c, false)
   }
   return c
 }
