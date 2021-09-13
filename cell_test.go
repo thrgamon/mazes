@@ -74,7 +74,7 @@ func TestUnlink(t *testing.T) {
 
 func TestLinked(t *testing.T) {
   c1 := NewCell(10, 10)
-  c2 := NewCell(10, 10)
+  c2 := NewCell(11, 11)
 
   c1.Link(c2)
   

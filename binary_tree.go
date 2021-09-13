@@ -1,24 +1,35 @@
 package main
 
-import "math/rand"
+import (
+  "math/rand"
+  "time"
+)
 
-func Generate (g Grid) Grid {
+func Generate (g *Grid) *Grid {
+  rand.Seed(time.Now().UnixNano())
+
   g.EachCell(func(c *Cell){
     var neighbours []*Cell
-    if c.north != nil {
-      neighbours = append(neighbours, c.north)
+
+    // The book implements this going to the north
+    // but it doesn't work unless we go south.
+    // I am not really sure why...
+    if c.south != nil {
+      neighbours = append(neighbours, c.south)
     }
 
     if c.east != nil {
       neighbours = append(neighbours, c.east)
     }
 
-    index := rand.Intn(len(neighbours))
+    if len(neighbours) != 0 {
+      index := rand.Intn(len(neighbours))
 
-    neighbour := neighbours[index]
+      neighbour := neighbours[index]
 
-    if neighbour != nil {
-      c.Link(neighbour)
+      if neighbour != nil {
+        c.Link(neighbour)
+      }
     }
   })
 

@@ -1,6 +1,11 @@
 package main
 
-import "math/rand"
+import (
+  "math/rand"
+  "io"
+  "strings"
+  "fmt"
+)
 
 type Grid struct {
 	rows   int
@@ -25,11 +30,11 @@ func NewGrid(rows int, cols int) *Grid {
 func (g Grid) GetCell(row int, col int) *Cell {
 	var cell *Cell
 
-	if row < 0 || row > g.rows {
+	if row < 0 || row > g.rows - 1 {
 		return cell
 	}
 
-	if col < 0 || col > g.cols {
+	if col < 0 || col > g.cols - 1 {
 		return cell
 	}
 
@@ -51,22 +56,66 @@ func (g Grid) Size() int {
 }
 
 func (g Grid) EachRow(f func(CellRow)) {
-	for r := 0; r < g.rows-1; r++ {
+	for r := 0; r < g.rows; r++ {
 		f(g.matrix[r])
 	}
 }
 
 func (g Grid) EachCell(f func(*Cell)) {
-	for r := 0; r < g.rows-1; r++ {
-		for c := 0; c < g.cols-1; c++ {
-			cell := g.matrix[r][c]
+  g.EachRow(func(cr CellRow) {
+    for _, cell := range cr {
 
 			if cell != nil {
 				f(cell)
 			}
-		}
-	}
+    }
+  })
 }
+
+func (g Grid) Output(writer io.Writer) {
+  var output strings.Builder
+
+  fmt.Fprintf(&output, "+%s\n", strings.Repeat("---+", g.cols))
+
+  g.EachRow(func(cr CellRow){
+    var top strings.Builder
+    fmt.Fprint(&top, "|")
+
+    var bottom strings.Builder
+    fmt.Fprint(&bottom, "+")
+
+    for _, cell := range cr {
+      if cell == nil {
+        cell = NewCell(-1, -1)
+      }
+
+      fmt.Fprint(&top, "   ")
+
+      if cell.Linked(cell.east) {
+        fmt.Fprint(&top, " ")
+      } else {
+        fmt.Fprint(&top, "|")
+      }
+
+      if cell.Linked(cell.south) {
+        fmt.Fprint(&bottom, "   ")
+      } else {
+        fmt.Fprint(&bottom, "---")
+      }
+
+      fmt.Fprint(&bottom, "+")
+    }
+
+      fmt.Fprint(&output, top.String())
+      fmt.Fprint(&output, "\n")
+      fmt.Fprint(&output, bottom.String())
+      fmt.Fprint(&output, "\n")
+
+  })
+
+  fmt.Fprintf(writer, "%s", output.String())
+}
+
 
 func prepareGrid(rows int, cols int) CellMatrix {
 	grid := make(CellMatrix, rows)
