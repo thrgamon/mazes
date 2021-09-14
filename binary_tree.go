@@ -5,7 +5,7 @@ import (
   "time"
 )
 
-func Generate (g *Grid) *Grid {
+func BinaryTree (g *Grid) *Grid {
   rand.Seed(time.Now().UnixNano())
 
   g.EachCell(func(c *Cell){

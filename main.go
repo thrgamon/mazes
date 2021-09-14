@@ -5,8 +5,8 @@ import (
 )
 
 func main() {
-  grid := NewGrid(4,4)
-  Generate(grid)
+  grid := NewGrid(10,10)
+  Sidewinder(grid)
 
   grid.Output(os.Stdout)
 }
