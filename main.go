@@ -9,6 +9,7 @@ import (
 func main() {
 	http.Handle("/sidewinder", http.HandlerFunc(sidewinder))
 	http.Handle("/binary", http.HandlerFunc(binaryTree))
+  http.Handle("/", http.FileServer(http.Dir("./static")))
 	err := http.ListenAndServe(":2003", nil)
 	if err != nil {
 		log.Fatal("ListenAndServe:", err)
@@ -16,14 +17,14 @@ func main() {
 }
 
 func sidewinder(w http.ResponseWriter, req *http.Request) {
-  grid := NewGrid(10,10)
+  grid := NewGrid(20,20)
   Sidewinder(grid)
 
   renderSvg(grid, w)
 }
 
 func binaryTree(w http.ResponseWriter, req *http.Request) {
-  grid := NewGrid(10,10)
+  grid := NewGrid(20,20)
   BinaryTree(grid)
 
   renderSvg(grid, w)
